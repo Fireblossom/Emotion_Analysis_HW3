@@ -52,4 +52,5 @@ class Corpus:
 class Sample:
     def __init__(self, label=None, text=''):
         self.label = label
-        self.text = tknzr.tokenize(text)
+        self.text = text
+        self.tokens = tknzr.tokenize(text)
