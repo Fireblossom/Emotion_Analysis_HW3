@@ -1,6 +1,6 @@
 from nltk.tokenize import TweetTokenizer
 from sklearn.metrics import classification_report
-
+import numpy as np
 
 tknzr = TweetTokenizer()
 
@@ -8,10 +8,18 @@ tknzr = TweetTokenizer()
 class Corpus:
     def __init__(self):
         self.samples = []
+        self.test_samples = []
         self.pred = []
+        self.label_set = set()
 
     def add_sample(self, label, text):
         self.samples.append(Sample(label, text))
+
+    def split_sample(self, ratio=0.1):
+        boundary = int(ratio * len(self.samples))
+        np.random.shuffle(self.samples)
+        self.test_samples = self.samples[:boundary]
+        self.samples = self.samples[boundary:]
 
     def prediction(self, model):
         """
@@ -49,8 +57,13 @@ class Corpus:
             print('Predict firstly.')
 
 
+LABLE_MAP = {'': 1, 'guilt': 2, 'surprise': 3, 'sadness': 4, 'fear': 5, 'anger': 6, 'noemo': 7, 'trust': 8,
+             'love': 9, 'anticipation': 10, 'confusion': 11, 'shame': 12, 'disgust': 13, 'joy': 0}
+
+
 class Sample:
     def __init__(self, label=None, text=''):
         self.label = label
+        self.mapped_label = LABLE_MAP[label]
         self.text = text
         self.tokens = tknzr.tokenize(text)
