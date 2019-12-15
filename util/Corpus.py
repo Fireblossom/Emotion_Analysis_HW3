@@ -27,7 +27,7 @@ class Corpus:
         :param model:
         :return:
         """
-        for sample in self.samples:
+        for sample in self.test_samples:
             self.pred.append(model(sample.text))
         self.label_set = self.get_label_set()
 
@@ -49,16 +49,16 @@ class Corpus:
     def evaluation(self):
         if self.pred:
             y_true = []
-            for sample in self.samples:
+            for sample in self.test_samples:
                 y_true.append(sample.label)
+            print(len(y_true), len(self.pred))
             t = classification_report(y_true, self.pred, target_names=list(self.label_set))
             print(t)
         else:
             print('Predict firstly.')
 
 
-LABLE_MAP = {'': 1, 'guilt': 2, 'surprise': 3, 'sadness': 4, 'fear': 5, 'anger': 6, 'noemo': 7, 'trust': 8,
-             'love': 9, 'anticipation': 10, 'confusion': 11, 'shame': 12, 'disgust': 13, 'joy': 0}
+LABLE_MAP = {'guilt': 0, 'sadness': 1, 'joy': 2, 'disgust': 3, 'anger': 4, 'fear': 5, 'shame': 6}
 
 
 class Sample:
